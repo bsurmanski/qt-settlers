@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="79">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <itemPath>Board.h</itemPath>
+      <itemPath>GLFrame.h</itemPath>
+      <itemPath>GameDockWidget.h</itemPath>
+      <itemPath>GameLibrary.h</itemPath>
+      <itemPath>GamePiece.h</itemPath>
+      <itemPath>GameWindow.h</itemPath>
+      <itemPath>MainGameWindow.h</itemPath>
+      <itemPath>MainMenu.h</itemPath>
+      <itemPath>Model.h</itemPath>
+      <itemPath>NetworkManager.h</itemPath>
+      <itemPath>PauseMenu.h</itemPath>
+      <itemPath>Player.h</itemPath>
+      <itemPath>Road.h</itemPath>
+      <itemPath>Robber.h</itemPath>
+      <itemPath>Seaport.h</itemPath>
+      <itemPath>SettingsMenu.h</itemPath>
+      <itemPath>Settlement.h</itemPath>
+      <itemPath>Sprite.h</itemPath>
+      <itemPath>StatisticsWindow.h</itemPath>
+      <itemPath>Tile.h</itemPath>
+      <itemPath>TradeMenu.h</itemPath>
+      <itemPath>TradeOffer.h</itemPath>
+      <itemPath>YearOfPlentyDialog.h</itemPath>
+      <itemPath>vmath.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <itemPath>Board.cpp</itemPath>
+      <itemPath>DevelopmentCard.cpp</itemPath>
+      <itemPath>GLFrame.cpp</itemPath>
+      <itemPath>GameDockWidget.cpp</itemPath>
+      <itemPath>GameLibrary.cpp</itemPath>
+      <itemPath>GamePiece.cpp</itemPath>
+      <itemPath>MainGameWindow.cpp</itemPath>
+      <itemPath>MainMenu.cpp</itemPath>
+      <itemPath>Model.cpp</itemPath>
+      <itemPath>NetworkManager.cpp</itemPath>
+      <itemPath>PauseMenu.cpp</itemPath>
+      <itemPath>Player.cpp</itemPath>
+      <itemPath>Road.cpp</itemPath>
+      <itemPath>Robber.cpp</itemPath>
+      <itemPath>Seaport.cpp</itemPath>
+      <itemPath>SettingsMenu.cpp</itemPath>
+      <itemPath>Settlement.cpp</itemPath>
+      <itemPath>Sprite.cpp</itemPath>
+      <itemPath>StatisticsWindow.cpp</itemPath>
+      <itemPath>Tile.cpp</itemPath>
+      <itemPath>TradeMenu.cpp</itemPath>
+      <itemPath>TradeOffer.cpp</itemPath>
+      <itemPath>YearOfPlentyDialog.cpp</itemPath>
+      <itemPath>main.cpp</itemPath>
+      <itemPath>vmath.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="4">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>default</compilerSet>
+      </toolsSet>
+      <qt>
+        <modules>core gui network opengl</modules>
+      </qt>
+      <compileType>
+      </compileType>
+    </conf>
+    <conf name="Release" type="4">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>default</compilerSet>
+      </toolsSet>
+      <qt>
+        <buildMode>1</buildMode>
+        <modules>core gui network opengl</modules>
+      </qt>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+    </conf>
+  </confs>
+</configurationDescriptor>
