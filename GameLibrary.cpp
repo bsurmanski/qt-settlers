@@ -118,7 +118,7 @@ void GameLibrary::setPlayers(std::vector<Player*>* plrs) {
 
 void GameLibrary::setCurrentPlayer(Player* player) {
     currentPlayer = player;
-    for (int i = 0; i < localPlayers; i++) {
+    for (int i = 0; i < getNumberOfPlayers(); i++) {
         if (player == players->at(i)) {
             currentPlayerIndex = i;
             player->beginTurn();
@@ -160,8 +160,8 @@ void GameLibrary::nextPlayerTurn() {
         if (!prev->isRemote()) {
             getNetworkManager()->sendPackets("trn", getCurrentLocalPlayer()->serialize());
         }
-        getCurrentLocalPlayer()->beginTurn();
     }
+    getDockWidget()->updatePlayerInfo();
 }
 
 bool GameLibrary::checkLargestArmy(Player* player) {
