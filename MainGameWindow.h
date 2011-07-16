@@ -15,6 +15,7 @@ class GameDockWidget;
 class GLFrame;
 class StatisticsWindow;
 class NetworkManager;
+class SettingsWidget;
 
 class MainGameWindow : public QMainWindow {
     Q_OBJECT
@@ -26,6 +27,7 @@ public:
 
 protected slots:
     void openStatistics();
+    void startGame();
 private:
     QMenuBar* menuBar;
     QStatusBar* statusBar;
@@ -39,7 +41,7 @@ private:
     GLFrame* gameFrame;
     
     StatisticsWindow* stat;
-    
+    SettingsWidget* settingsWidget;
     NetworkManager* networker;
 
 };

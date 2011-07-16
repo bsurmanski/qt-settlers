@@ -19,7 +19,7 @@
       <itemPath>Road.h</itemPath>
       <itemPath>Robber.h</itemPath>
       <itemPath>Seaport.h</itemPath>
-      <itemPath>SettingsMenu.h</itemPath>
+      <itemPath>SettingsWidget.h</itemPath>
       <itemPath>Settlement.h</itemPath>
       <itemPath>Sprite.h</itemPath>
       <itemPath>StatisticsWindow.h</itemPath>
@@ -51,7 +51,7 @@
       <itemPath>Road.cpp</itemPath>
       <itemPath>Robber.cpp</itemPath>
       <itemPath>Seaport.cpp</itemPath>
-      <itemPath>SettingsMenu.cpp</itemPath>
+      <itemPath>SettingsWidget.cpp</itemPath>
       <itemPath>Settlement.cpp</itemPath>
       <itemPath>Sprite.cpp</itemPath>
       <itemPath>StatisticsWindow.cpp</itemPath>
