@@ -96,7 +96,7 @@ void MainGameWindow::startGame() {
     QObject::connect(actionStatistics, SIGNAL(triggered()), this, SLOT(openStatistics()));
     this->setMenuBar(menuBar);
 
-    NetworkManager* nm = new NetworkManager(true);
+    NetworkManager* nm = new NetworkManager(settingsWidget->getIP(), settingsWidget->getPort().toInt(), settingsWidget->serverSet());
     GameLibrary::setNetworkManager(nm);
 
     client_start();

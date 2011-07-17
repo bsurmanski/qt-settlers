@@ -14,7 +14,7 @@
 class NetworkManager : public QObject {
     Q_OBJECT
 public:
-    NetworkManager(const bool server, QObject* parent = 0);
+    NetworkManager(const QString ip, const int port, const bool server, QObject* parent = 0);
     virtual ~NetworkManager();
 
     bool isServer();
@@ -35,6 +35,7 @@ private:
     //SERVER
     bool server;
     int port;
+    QString ip;
     std::string message;
     QTcpServer* tcpServer;
     QList<QTcpSocket*>* server_clients;

@@ -13,9 +13,11 @@
 #include <QtGui/QMessageBox>
 #include <string>
 
-NetworkManager::NetworkManager(const bool server, QObject* parent) : QObject::QObject(parent) {
+NetworkManager::NetworkManager(QString ip, int port, const bool server, QObject* parent) : QObject::QObject(parent) {
     connected = server;
     this->server = server;
+    this->ip = ip;
+    this->port = port;
     port = 9876;
     if (server) {
         tcpServer = new QTcpServer();
@@ -74,7 +76,7 @@ void NetworkManager::server_newConnect() {
 }
 
 void NetworkManager::client_getConnect() {
-    tcpClient->connectToHost("127.0.0.1", port);
+    tcpClient->connectToHost(ip, port);
     std::vector<Player*>* players = GameLibrary::getPlayers();
     for (int i = 0; i < players->size(); i++) {
         sendPackets("plr", players->at(i)->serialize());
@@ -113,7 +115,7 @@ void NetworkManager::parsePackets(std::string msg) {
 
     std::string code = msg.substr(0, 3);
     msg.erase(0, 3);
-    
+
     if (code.compare("msg") == 0) { // chat message
         GameLibrary::getDockWidget()->newChatMessage(msg);
 

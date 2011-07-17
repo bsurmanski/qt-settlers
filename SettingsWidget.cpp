@@ -87,3 +87,15 @@ void SettingsWidget::startPressed() {
     emit startGame();
 }
 
+QString SettingsWidget::getIP() {
+    return ipLine->text();
+}
+
+QString SettingsWidget::getPort() {
+    return tcpPortLine->text();
+}
+
+bool SettingsWidget::serverSet() {
+    return serverCheckBox->isChecked();
+}
+

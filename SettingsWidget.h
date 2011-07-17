@@ -25,6 +25,9 @@ public:
     SettingsWidget(QWidget* parent = 0);
     virtual ~SettingsWidget();
     //void initialize();
+    QString getIP();
+    QString getPort();
+    bool serverSet();
 
 signals:
 void startGame();
