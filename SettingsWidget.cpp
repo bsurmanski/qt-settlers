@@ -34,7 +34,7 @@ SettingsWidget::SettingsWidget(QWidget* parent) : QWidget(parent) {
     tcpPortLine->setText("9876");
     networkLayout->addRow(tcpPortLabel, tcpPortLine);
     networkBox->setLayout(networkLayout);
-    layout->addWidget(networkBox, 1, 0, 1, 2);
+    layout->addWidget(networkBox, 1, 0, 1, 3);
 
     playerBox = new QGroupBox();
     playerBox->setTitle("Local Players");
@@ -53,12 +53,21 @@ SettingsWidget::SettingsWidget(QWidget* parent) : QWidget(parent) {
     playerLayout->addWidget(addPlayerButton, 0, 1, 1, 1);
     playerLayout->addWidget(removePlayerButton, 1, 1, 1, 1);
     playerBox->setLayout(playerLayout);
-    layout->addWidget(playerBox, 2, 0, 1, 2);
+    layout->addWidget(playerBox, 2, 0, 1, 3);
+
+    advancedButton = new QCommandLinkButton();
+    advancedButton->setText("Advanced Options");
+    connect(advancedButton, SIGNAL(pressed()), this, SLOT(openAdvancedOptions()));
     startButton = new QPushButton();
     startButton->setText("Start Game!");
+    spacer = new QSpacerItem(30, 0, QSizePolicy::Expanding);
     connect(startButton, SIGNAL(pressed()), this, SLOT(startPressed()));
-    layout->addWidget(startButton, 3, 1, 1, 1);
+    layout->addWidget(advancedButton, 3, 0, 1, 1);
+    layout->addItem(spacer, 3, 1, 1, 1);
+    layout->addWidget(startButton, 3, 2, 1, 1);
     this->setLayout(layout);
+
+    advancedOptions = NULL;
 }
 
 SettingsWidget::~SettingsWidget() {
@@ -74,6 +83,14 @@ SettingsWidget::~SettingsWidget() {
 //        }
 //    }
 //}
+
+void SettingsWidget::openAdvancedOptions() {
+    if (!advancedOptions) {
+        advancedOptions = new AdvancedOptions();
+    }
+    advancedOptions->exec();
+    advancedOptions->apply();
+}
 
 void SettingsWidget::toggleNetworking(int state) {
     networkBox->setEnabled(state);

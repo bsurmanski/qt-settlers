@@ -16,17 +16,17 @@ Board::Board() {
     GameLibrary::setCurrentBoard(this);
     boardSize = 1;
 
-    for (int i = 1; i < BOARDRADIUS; i++) {
+    for (int i = 1; i < GameLibrary::BOARDRADIUS; i++) {
         boardSize += i * 6;
     }
 
-    numDeserts = (int) std::max(floor((double) (boardSize / 10)) - 4 * ISLANDS, 0.0);
+    numDeserts = (int) std::max(floor((double) (boardSize / 10)) - 4 * GameLibrary::ISLANDS, 0.0);
     numWaterTiles = 0;
 
     innerBoardSize = boardSize; // board not including water
 
-    if (WATER_BORDER) {
-        boardSize += BOARDRADIUS * 6; // board with water
+    if (GameLibrary::WATER_BORDER) {
+        boardSize += GameLibrary::BOARDRADIUS * 6; // board with water
     }
 
     int* chits = getScrambledChits();
@@ -75,12 +75,12 @@ void Board::generateBoard(int size, int* resources, int* chits) {
     int previousFirstIndex;
     int currentFirstIndex = 0;
     int aboveTileIndex;
-    Vector3f direction = Vector3f(TILE_SEPARATION * cos(angle), TILE_SEPARATION * sin(angle), 0); // direction to place next tile in
+    Vector3f direction = Vector3f(GameLibrary::TILE_SEPARATION * cos(angle), GameLibrary::TILE_SEPARATION * sin(angle), 0); // direction to place next tile in
     Vector3f previousTile; // reference direction to previous tile in same ring
     Vector3f aboveTile; // refrerence direction to tile(s) in above-ring
     Vector3f position = Vector3f(); //position to create tile at
 
-    for (int i = 0; i < BOARDRADIUS + WATER_BORDER; i++) { // radially generate the shape
+    for (int i = 0; i < GameLibrary::BOARDRADIUS + GameLibrary::WATER_BORDER; i++) { // radially generate the shape
 
         previousFirstIndex = currentFirstIndex;
         currentFirstIndex = count;
@@ -90,7 +90,7 @@ void Board::generateBoard(int size, int* resources, int* chits) {
             connectionCount = 1;
         }
 
-        position = Vector3f(0, -i * TILE_SEPARATION, 0);
+        position = Vector3f(0, -i * GameLibrary::TILE_SEPARATION, 0);
         angle = PI / 6;
         for (int j = 0; j < i * 6 || (i == 0 && j == 0); j++) { //repeat until ring is full, or if first hexagon
             tiles[count] = new Tile(position, chits[count], resources[count]); //create new tile at position, with CHIT and RESOURCE
@@ -101,7 +101,7 @@ void Board::generateBoard(int size, int* resources, int* chits) {
                     connectionCount = round(connectionCount); // prevents error propagation
                 }
                 // connect to ring above
-                aboveTile = Vector3f(TILE_SEPARATION * cos(angle + PI / 3), TILE_SEPARATION * sin(angle + PI / 3), 0);
+                aboveTile = Vector3f(GameLibrary::TILE_SEPARATION * cos(angle + PI / 3), GameLibrary::TILE_SEPARATION * sin(angle + PI / 3), 0);
                 if (j == (i * 6) - 1) {
                     aboveTileIndex = previousFirstIndex;
                 } else {
@@ -116,7 +116,7 @@ void Board::generateBoard(int size, int* resources, int* chits) {
                 }
 
                 if (connectionCount != floor(connectionCount)) { // tile not on corner, connect to 2 above rings
-                    aboveTile = Vector3f(TILE_SEPARATION * cos(angle + PI * 2 / 3), TILE_SEPARATION * sin(angle + PI * 2 / 3), 0);
+                    aboveTile = Vector3f(GameLibrary::TILE_SEPARATION * cos(angle + PI * 2 / 3), GameLibrary::TILE_SEPARATION * sin(angle + PI * 2 / 3), 0);
                     tiles[count]->setBorderingTile(tiles[count - ((int) ceil(connectionCount))], aboveTile);
                 }
 
@@ -140,17 +140,12 @@ void Board::generateBoard(int size, int* resources, int* chits) {
 
             if (i != 0 && ((count % i) == 0)) { //rotate on corners
                 angle += PI / 3;
-                direction = Vector3f(TILE_SEPARATION * cos(angle), TILE_SEPARATION * sin(angle), 0);
+                direction = Vector3f(GameLibrary::TILE_SEPARATION * cos(angle), GameLibrary::TILE_SEPARATION * sin(angle), 0);
             }
             tiles[count]->assignUnusedNodes(); // create new corner nodes if not initialized
             count++;
         }
     }
-}
-
-Tile* Board::getTileNeighbor(int tile, int direction) {
-    Tile* t = tiles[tile];
-    return NULL;
 }
 
 Board::Board(const char* serial, int length) {
@@ -245,7 +240,7 @@ int* Board::getScrambledResources(int deserts) {
     int* resources = new int [boardSize];
     for (int i = 0; i < boardSize; i++) {
         if (i < innerBoardSize) {
-            if (ISLANDS) {
+            if (GameLibrary::ISLANDS) {
                 if (i % 2 == 0) {
                     resources[i] = ((i % 10) / 2);
                     resourceCount[resources[i]]++;
@@ -289,7 +284,7 @@ int* Board::getScrambledResources(int deserts) {
 //}
 
 void Board::placePorts() {
-    numPorts = BOARDRADIUS * 3; //(int) numWaterTiles / 2;
+    numPorts = GameLibrary::BOARDRADIUS * 3; //(int) numWaterTiles / 2;
 
     int* portNumbers = getScrambledPorts(numPorts);
 
@@ -403,7 +398,7 @@ bool Board::moveRobber(int tile) {
 }
 
 float Board::getBorderSize() {
-    return (TILE_SEPARATION - 2 * sin(PI / 3));
+    return (GameLibrary::TILE_SEPARATION - 2 * sin(PI / 3));
 }
 
 Tile::CornerNode* Board::getDefaultNodeSelection() {

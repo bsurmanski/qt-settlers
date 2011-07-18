@@ -18,13 +18,6 @@
 
 //options
 #define MAX_PLAYERS 8
-#define BOARDRADIUS 5 //TODO: if boardsize > 12, throws on L81. fix
-#define TILE_SEPARATION 1.8
-#define WATER_BORDER true
-#define ISLANDS true
-#define BRIDGES true
-#define BOATS true
-#define STARTING_RESOURCES true
 
 //resources
 #define NUM_RESOURCES 5
@@ -83,6 +76,14 @@ class QStatusBar;
 class GameLibrary {
 public:
 
+    static int BOARDRADIUS; //TODO: if boardsize > 12, throws on L81. fix
+    static float TILE_SEPARATION;
+    static bool WATER_BORDER;
+    static bool ISLANDS;
+    static bool BRIDGES;
+    static bool BOATS;
+    static bool STARTING_RESOURCES;
+
     GameLibrary() {
         GameLibrary::resourceDir = std::vector<std::string > ();
         GameLibrary::getdir("Resources/", GameLibrary::resourceDir);
@@ -101,7 +102,7 @@ public:
     }
 
     static std::vector<Player*>* getPlayers();
-    static void setPlayers(std::vector<Player*>* plrs); 
+    static void setPlayers(std::vector<Player*>* plrs);
     static void setCurrentPlayer(Player* player);
     static void addPlayer(Player* player);
 

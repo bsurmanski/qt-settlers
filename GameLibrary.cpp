@@ -13,6 +13,14 @@
 #include "GameDockWidget.h"
 #include "NetworkManager.h"
 
+int GameLibrary::BOARDRADIUS = 5; //TODO: if boardsize > 12, throws on L81. fix
+float GameLibrary::TILE_SEPARATION = 1.8; //1.7 is directly touching
+bool GameLibrary::WATER_BORDER = true;
+bool GameLibrary::ISLANDS = true;
+bool GameLibrary::BRIDGES = true;
+bool GameLibrary::BOATS = true;
+bool GameLibrary::STARTING_RESOURCES = true;
+
 GLuint GameLibrary::loadTexture(std::string filename) {
     filename = "Resources/" + filename;
     GLuint tex;

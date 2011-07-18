@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>AdvancedOptions.h</itemPath>
       <itemPath>Board.h</itemPath>
       <itemPath>GLFrame.h</itemPath>
       <itemPath>GameDockWidget.h</itemPath>
@@ -36,6 +37,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>AdvancedOptions.cpp</itemPath>
       <itemPath>Board.cpp</itemPath>
       <itemPath>DevelopmentCard.cpp</itemPath>
       <itemPath>GLFrame.cpp</itemPath>

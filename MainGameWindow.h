@@ -23,7 +23,7 @@ public:
     MainGameWindow();
     virtual ~MainGameWindow();
     
-    void client_start();
+    bool client_start();
 
 protected slots:
     void openStatistics();

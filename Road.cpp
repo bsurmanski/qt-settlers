@@ -15,7 +15,7 @@ Road::Road() {
 
 Road::Road(Tile::CornerNode* node, Tile::CornerNode* node2, Vector3f color) {
     if (node == NULL || node->isOnWater() || node2 == NULL || node2->isOnWater()) {
-        if (BOATS) {
+        if (GameLibrary::BOATS) {
             isBoat = true;
             isBridge = false;
             //throw "boats not supported yet"; // FIX BOATS
@@ -23,7 +23,7 @@ Road::Road(Tile::CornerNode* node, Tile::CornerNode* node2, Vector3f color) {
             throw "attempt to make boat, or not valid road"; // not a valid road, points to something it shouldnt
         }
     } else if (node->isBridge(node2)) {
-        if (!BRIDGES) {
+        if (!GameLibrary::BRIDGES) {
             throw "attempt to make bridge";
         }
         isBoat = false;

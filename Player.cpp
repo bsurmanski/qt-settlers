@@ -172,7 +172,7 @@ void Player::placeSettlement() {
         }
 
         if (startOfGame) {
-            if (STARTING_RESOURCES && placedSettlements == 1) {
+            if (GameLibrary::STARTING_RESOURCES && placedSettlements == 1) {
                 for (int i = 0; i < 3; i++) { // give starting resources for first settlement
                     int resource = selection->getResource(i);
                     if (resource >= 0)
@@ -243,7 +243,7 @@ bool Player::canPlaceRoad(Tile::CornerNode* corner, int direction) {
     }
 
     if (corner->isBridge(corner->getSelection(direction))) {
-        if (!BRIDGES) { // cannot make bridge, not allowed
+        if (!GameLibrary::BRIDGES) { // cannot make bridge, not allowed
             std::cout << "attempt to make bridge";
             return false;
         }
@@ -253,7 +253,7 @@ bool Player::canPlaceRoad(Tile::CornerNode* corner, int direction) {
     }
 
     if (corner->getSelection(direction)->isOnWater()) {
-        if (!BOATS) { // only allowed boats if boats setting on
+        if (!GameLibrary::BOATS) { // only allowed boats if boats setting on
             std::cout << "attempt to make boat";
             return false;
         }
@@ -293,7 +293,7 @@ void Player::placeRoad(Tile::CornerNode* corner, int direction) {
         if (corner->isBridge(corner->getSelection(direction)) && (!startOfGame && freeRoads == 0)) {
             resources[ROCK]--;
         } else if (corner->getSelection(direction)->isOnWater()) {
-            if (BOATS) {
+            if (GameLibrary::BOATS) {
                 if (!startOfGame) {
                     if (freeRoads > 0) {
                         freeRoads--;

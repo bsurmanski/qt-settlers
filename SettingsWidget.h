@@ -18,6 +18,8 @@
 #include <QtGui/QGroupBox>
 #include <QtGui/QSpacerItem>
 #include <QtGui/QPushButton>
+#include <QtGui/QCommandLinkButton>
+#include "AdvancedOptions.h"
 
 class SettingsWidget : public QWidget {
     Q_OBJECT
@@ -32,10 +34,13 @@ public:
 signals:
 void startGame();
 protected slots:
+    void openAdvancedOptions();
     void startPressed();
     void toggleNetworking(int state);
     void toggleServer(int state);
 private:
+    AdvancedOptions* advancedOptions;
+    
     QGridLayout* layout;
     QCheckBox* networkCheckBox;
     QGroupBox* networkBox;
@@ -52,6 +57,7 @@ private:
     QPushButton* addPlayerButton;
     QPushButton* removePlayerButton;
 
+    QCommandLinkButton* advancedButton;
     QPushButton* startButton;
     QSpacerItem* spacer;
 };

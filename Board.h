@@ -52,8 +52,6 @@ private:
     void generateBoard(int size, int* resources, int* chits);
 
     float getBorderSize();
-    
-    Tile* getTileNeighbor(int tile, int direction);
 
     int* getScrambledChits();
     int* getScrambledResources(int deserts);

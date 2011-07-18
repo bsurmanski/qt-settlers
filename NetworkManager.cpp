@@ -14,6 +14,9 @@
 #include <string>
 
 NetworkManager::NetworkManager(QString ip, int port, const bool server, QObject* parent) : QObject::QObject(parent) {
+    tcpClient = NULL;
+    tcpServer = NULL;
+    server_clients = NULL;
     connected = server;
     this->server = server;
     this->ip = ip;
@@ -34,6 +37,15 @@ NetworkManager::NetworkManager(QString ip, int port, const bool server, QObject*
 }
 
 NetworkManager::~NetworkManager() {
+    if (tcpClient) {
+        delete tcpClient;
+    }
+    if (tcpServer) {
+        delete tcpServer;
+    }
+    if (server_clients) {
+        delete server_clients;
+    }
 }
 
 bool NetworkManager::isServer() {
@@ -67,7 +79,7 @@ void NetworkManager::server_newConnect() {
     std::vector<Player*>* players = GameLibrary::getPlayers();
     server_clients->append(client);
     sendPackets("brd" + GameLibrary::getCurrentBoard()->serialize(), client);
-    for (int i = 0; i < players->size(); i++) {
+    for (unsigned int i = 0; i < players->size(); i++) {
         sendPackets("plr" + players->at(i)->serialize(), client);
     }
     sendPackets("trn", GameLibrary::getCurrentLocalPlayer()->serialize());
@@ -78,7 +90,7 @@ void NetworkManager::server_newConnect() {
 void NetworkManager::client_getConnect() {
     tcpClient->connectToHost(ip, port);
     std::vector<Player*>* players = GameLibrary::getPlayers();
-    for (int i = 0; i < players->size(); i++) {
+    for (unsigned int i = 0; i < players->size(); i++) {
         sendPackets("plr", players->at(i)->serialize());
     }
     connect(tcpClient, SIGNAL(readyRead()), this, SLOT(client_parsePackets()));
@@ -175,7 +187,7 @@ void NetworkManager::parsePackets(std::string msg) {
         GameLibrary::getCurrentBoard()->buildLists();
         std::vector<Player*>* players = GameLibrary::getPlayers();
         if (players != NULL) {
-            for (int i = 0; i < players->size(); i++) {
+            for (unsigned int i = 0; i < players->size(); i++) {
                 players->at(i)->reset();
             }
         }

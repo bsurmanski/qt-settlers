@@ -12,6 +12,7 @@
 #include <QtCore/QString>
 #include <QtGui/QDockWidget>
 #include <QtGui/QSplitter>
+#include <QtGui/QMessageBox>
 
 #include "GLFrame.h"
 #include "GameDockWidget.h"
@@ -41,7 +42,7 @@ MainGameWindow::MainGameWindow() : QMainWindow() {
     stat = NULL;
 }
 
-void MainGameWindow::client_start() {
+bool MainGameWindow::client_start() {
     if (GameLibrary::getNetworkManager()->isConnected()) {
         splitterWidget = new QSplitter(this);
         gameFrame = new GLFrame(splitterWidget);
@@ -53,6 +54,10 @@ void MainGameWindow::client_start() {
         this->setCentralWidget(splitterWidget);
         gameFrame->newGame();
         dockContent->updatePlayerInfo();
+        return true;
+    } else {
+        QMessageBox::warning(this, "No Connection", "Could not connect to host server. Please check your IP and Port settings and try again. \nIf you would like to host a game, please check the 'Host Server' Option. \nIf you would like to play on a single computer, please uncheck the 'Networking' option");
+        return false;
     }
 }
 
@@ -81,24 +86,26 @@ void MainGameWindow::openStatistics() {
 }
 
 void MainGameWindow::startGame() {
-    menuBar = new QMenuBar(this);
-    menuFile = new QMenu(QObject::tr("File")); //File menu
-    actionQuit = new QAction(QObject::tr("&Quit"), this); // Quit Option
-    menuFile->addAction(actionQuit);
-    menuWindow = new QMenu(QObject::tr("Window")); // Window menu
-    actionStatistics = new QAction(QObject::tr("&Statistics"), this);
-    menuWindow->addAction(actionStatistics);
-    menuHelp = new QMenu(QObject::tr("Help")); // help menu
-    menuBar->addMenu(menuFile);
-    menuBar->addMenu(menuWindow);
-    menuBar->addMenu(menuHelp);
-    QObject::connect(actionQuit, SIGNAL(triggered()), this, SLOT(close()));
-    QObject::connect(actionStatistics, SIGNAL(triggered()), this, SLOT(openStatistics()));
-    this->setMenuBar(menuBar);
-
     NetworkManager* nm = new NetworkManager(settingsWidget->getIP(), settingsWidget->getPort().toInt(), settingsWidget->serverSet());
     GameLibrary::setNetworkManager(nm);
 
-    client_start();
+    if (client_start()) {
+        menuBar = new QMenuBar(this);
+        menuFile = new QMenu(QObject::tr("File")); //File menu
+        actionQuit = new QAction(QObject::tr("&Quit"), this); // Quit Option
+        menuFile->addAction(actionQuit);
+        menuWindow = new QMenu(QObject::tr("Window")); // Window menu
+        actionStatistics = new QAction(QObject::tr("&Statistics"), this);
+        menuWindow->addAction(actionStatistics);
+        menuHelp = new QMenu(QObject::tr("Help")); // help menu
+        menuBar->addMenu(menuFile);
+        menuBar->addMenu(menuWindow);
+        menuBar->addMenu(menuHelp);
+        QObject::connect(actionQuit, SIGNAL(triggered()), this, SLOT(close()));
+        QObject::connect(actionStatistics, SIGNAL(triggered()), this, SLOT(openStatistics()));
+        this->setMenuBar(menuBar);
+    } else {
+        delete nm;
+    }
 }
 
