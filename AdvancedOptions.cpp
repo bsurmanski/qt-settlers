@@ -67,6 +67,18 @@ void AdvancedOptions::apply() {
     GameLibrary::WATER_BORDER = waterBorder->isChecked();
 }
 
+std::string AdvancedOptions::serialize() {
+    std::string str = "";
+    str += GameLibrary::IntToStr(boardRadius->value()) + " ";
+    str += (boats->isChecked() ? "1 " : "0 ");
+    str += (bridges->isChecked() ? "1 " : "0 ");
+    str += (islands->isChecked() ? "1 " : "0 ");
+    str += (startingResources->isChecked() ? "1 " : "0 ");
+    str += "1.8 ";
+    str += (waterBorder->isChecked() ? "1 " : "0 ");
+    return str;
+}
+
 AdvancedOptions::~AdvancedOptions() {
     delete layout;
     delete radiusLabel;

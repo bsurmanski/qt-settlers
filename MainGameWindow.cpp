@@ -13,6 +13,7 @@
 #include <QtGui/QDockWidget>
 #include <QtGui/QSplitter>
 #include <QtGui/QMessageBox>
+#include <time.h>
 
 #include "GLFrame.h"
 #include "GameDockWidget.h"
@@ -23,15 +24,18 @@
 #include "MainGameWindow.h"
 
 MainGameWindow::MainGameWindow() : QMainWindow() {
+    srand(time(NULL));
     GameLibrary::setCurrentMainWindow(this);
     GameLibrary* single = new GameLibrary();
+    NetworkManager* nm = new NetworkManager();
+    GameLibrary::setNetworkManager(nm);
 
     setObjectName(QObject::tr("Settlers!"));
 
     settingsWidget = new SettingsWidget(this);
     this->setCentralWidget(settingsWidget);
     settingsWidget->show();
-    connect(settingsWidget, SIGNAL(startGame()), this, SLOT(startGame()));
+    connect(settingsWidget, SIGNAL(startGame()), this, SLOT(startConnect()));
 
     statusBar = new QStatusBar(this);
     single->setQStatusBar(statusBar);
@@ -85,9 +89,15 @@ void MainGameWindow::openStatistics() {
     stat->show();
 }
 
+void MainGameWindow::startConnect() {
+    settingsWidget->createPlayers();
+    GameLibrary::getNetworkManager()->setConnection(settingsWidget->getIP(), settingsWidget->getPort().toInt(), settingsWidget->serverSet());
+    if (GameLibrary::getNetworkManager()->isServer()) {
+        startGame();
+    }
+}
+
 void MainGameWindow::startGame() {
-    NetworkManager* nm = new NetworkManager(settingsWidget->getIP(), settingsWidget->getPort().toInt(), settingsWidget->serverSet());
-    GameLibrary::setNetworkManager(nm);
 
     if (client_start()) {
         menuBar = new QMenuBar(this);
@@ -104,8 +114,6 @@ void MainGameWindow::startGame() {
         QObject::connect(actionQuit, SIGNAL(triggered()), this, SLOT(close()));
         QObject::connect(actionStatistics, SIGNAL(triggered()), this, SLOT(openStatistics()));
         this->setMenuBar(menuBar);
-    } else {
-        delete nm;
     }
 }
 

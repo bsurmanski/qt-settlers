@@ -7,8 +7,11 @@
 
 #include "SettingsWidget.h"
 #include "GameLibrary.h"
+#include "Player.h"
+#include <QtGui/QMessageBox>
 
 SettingsWidget::SettingsWidget(QWidget* parent) : QWidget(parent) {
+    GameLibrary::setSettingsWidget(this);
     layout = new QGridLayout();
     networkCheckBox = new QCheckBox();
     networkCheckBox->setText("Enable Networking");
@@ -39,24 +42,23 @@ SettingsWidget::SettingsWidget(QWidget* parent) : QWidget(parent) {
     playerBox = new QGroupBox();
     playerBox->setTitle("Local Players");
     playerLayout = new QGridLayout();
-    playerTable = new QTableWidget();
-    playerTable->setColumnCount(2);
-    QStringList columns;
-    columns.append("Name");
-    columns.append("Color");
-    playerTable->setHorizontalHeaderLabels(columns);
+    playerTable = new QListWidget();
     addPlayerButton = new QPushButton();
-    addPlayerButton->setText("Add Player");
+    addPlayerButton->setText("Add New Player");
+    connect(addPlayerButton, SIGNAL(pressed()), this, SLOT(addPlayer()));
     removePlayerButton = new QPushButton();
     removePlayerButton->setText("Remove Player");
+    connect(removePlayerButton, SIGNAL(pressed()), this, SLOT(removePlayer()));
     playerLayout->addWidget(playerTable, 0, 0, 2, 1);
     playerLayout->addWidget(addPlayerButton, 0, 1, 1, 1);
     playerLayout->addWidget(removePlayerButton, 1, 1, 1, 1);
     playerBox->setLayout(playerLayout);
+
     layout->addWidget(playerBox, 2, 0, 1, 3);
 
     advancedButton = new QCommandLinkButton();
     advancedButton->setText("Advanced Options");
+    advancedButton->setEnabled(false);
     connect(advancedButton, SIGNAL(pressed()), this, SLOT(openAdvancedOptions()));
     startButton = new QPushButton();
     startButton->setText("Start Game!");
@@ -73,16 +75,17 @@ SettingsWidget::SettingsWidget(QWidget* parent) : QWidget(parent) {
 SettingsWidget::~SettingsWidget() {
 }
 
-//void SettingsWidget::initialize() {
-//    int rows = playerTable->rowCount();
-//    int cols = playerTable->columnCount();
-//    QString cellText;
-//    for (int i = 0; i < rows; i++) {
-//        for (int j = 0; j < cols; j++) {
-//            cellText = playerTable->takeItem(i, j)->text();
-//        }
-//    }
-//}
+void SettingsWidget::addPlayer() {
+    QString playerName = QString::fromStdString("Player " + GameLibrary::IntToStr(playerTable->count()));
+    QListWidgetItem* item = new QListWidgetItem();
+    item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+    item->setText(playerName);
+    playerTable->addItem(item);
+}
+
+void SettingsWidget::removePlayer() {
+    delete playerTable->takeItem(playerTable->row(playerTable->currentItem()));
+}
 
 void SettingsWidget::openAdvancedOptions() {
     if (!advancedOptions) {
@@ -92,16 +95,36 @@ void SettingsWidget::openAdvancedOptions() {
     advancedOptions->apply();
 }
 
+std::string SettingsWidget::getAdvancedOptionsSerial(){
+    return advancedOptions->serialize();
+}
+
 void SettingsWidget::toggleNetworking(int state) {
     networkBox->setEnabled(state);
 }
 
 void SettingsWidget::toggleServer(int state) {
     ipLine->setEnabled(state == 0);
+    advancedButton->setEnabled(state != 0);
+}
+
+void SettingsWidget::createPlayers() {
+    int numPlayers = playerTable->count();
+    for (int i = 0; i < numPlayers; i++) { //initialize Players
+        std::string playerName = playerTable->item(i)->text().toStdString();
+        Vector3f color = possiblePlayerColors[rand() % 8];
+        Player* p = new Player(color, playerName);
+        p->reset();
+        GameLibrary::addPlayer(p);
+    }
 }
 
 void SettingsWidget::startPressed() {
-    emit startGame();
+    if (playerTable->count() > 0) {
+        emit startGame();
+    } else {
+        QMessageBox::information(this, "No players!", "You need to add at least one player to start!");
+    }
 }
 
 QString SettingsWidget::getIP() {

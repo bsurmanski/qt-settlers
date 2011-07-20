@@ -24,10 +24,11 @@ public:
     virtual ~MainGameWindow();
     
     bool client_start();
+    void startGame();
 
 protected slots:
     void openStatistics();
-    void startGame();
+    void startConnect();
 private:
     QMenuBar* menuBar;
     QStatusBar* statusBar;

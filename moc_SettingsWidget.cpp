@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'SettingsWidget.h'
 **
-** Created: Mon Jul 18 16:00:28 2011
+** Created: Wed Jul 20 16:25:52 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.3)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_SettingsWidget[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-       5,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -35,17 +35,19 @@ static const uint qt_meta_data_SettingsWidget[] = {
 
  // slots: signature, parameters, type, tag, flags
       28,   15,   15,   15, 0x09,
-      50,   15,   15,   15, 0x09,
-      71,   65,   15,   15, 0x09,
-      93,   65,   15,   15, 0x09,
+      40,   15,   15,   15, 0x09,
+      55,   15,   15,   15, 0x09,
+      77,   15,   15,   15, 0x09,
+      98,   92,   15,   15, 0x09,
+     120,   92,   15,   15, 0x09,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_SettingsWidget[] = {
-    "SettingsWidget\0\0startGame()\0"
-    "openAdvancedOptions()\0startPressed()\0"
-    "state\0toggleNetworking(int)\0"
+    "SettingsWidget\0\0startGame()\0addPlayer()\0"
+    "removePlayer()\0openAdvancedOptions()\0"
+    "startPressed()\0state\0toggleNetworking(int)\0"
     "toggleServer(int)\0"
 };
 
@@ -79,13 +81,15 @@ int SettingsWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: startGame(); break;
-        case 1: openAdvancedOptions(); break;
-        case 2: startPressed(); break;
-        case 3: toggleNetworking((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 4: toggleServer((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 1: addPlayer(); break;
+        case 2: removePlayer(); break;
+        case 3: openAdvancedOptions(); break;
+        case 4: startPressed(); break;
+        case 5: toggleNetworking((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 6: toggleServer((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
-        _id -= 5;
+        _id -= 7;
     }
     return _id;
 }

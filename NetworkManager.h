@@ -14,8 +14,10 @@
 class NetworkManager : public QObject {
     Q_OBJECT
 public:
-    NetworkManager(const QString ip, const int port, const bool server, QObject* parent = 0);
+    NetworkManager(QObject* parent = 0);
     virtual ~NetworkManager();
+
+    void setConnection(const QString ip, const int port, const bool server);
 
     bool isServer();
     bool isConnected();

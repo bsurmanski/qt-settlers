@@ -40,6 +40,9 @@ public:
     void upgradeSettlement(Tile::CornerNode* pos);
     
     bool isRemote();
+    void setRemote(bool rmt);
+    
+    void setCurrentBoard(Board* b);
     
     std::string serialize();
     

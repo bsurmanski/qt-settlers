@@ -149,7 +149,6 @@ void Board::generateBoard(int size, int* resources, int* chits) {
 }
 
 Board::Board(const char* serial, int length) {
-    //TODO: dont forget: numDeserts, numWaterTiles
     numDeserts = 0;
     numWaterTiles = 0;
     robber = NULL;
@@ -441,7 +440,7 @@ void Board::Draw() {
     //glColor3f(1, 1, 1);
     //glCallList(numbersDisplayList);
     if (numDeserts > 0) {
-        robber->Draw(); //TODO:robber does not show up on clients
+        robber->Draw(); 
     }
 }
 

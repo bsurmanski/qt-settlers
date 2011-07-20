@@ -70,13 +70,14 @@ class GLFrame;
 class Board;
 class NetworkManager;
 class MainGameWindow;
+class SettingsWidget;
 
 class QStatusBar;
 
 class GameLibrary {
 public:
 
-    static int BOARDRADIUS; //TODO: if boardsize > 12, throws on L81. fix
+    static int BOARDRADIUS;
     static float TILE_SEPARATION;
     static bool WATER_BORDER;
     static bool ISLANDS;
@@ -105,6 +106,8 @@ public:
     static void setPlayers(std::vector<Player*>* plrs);
     static void setCurrentPlayer(Player* player);
     static void addPlayer(Player* player);
+
+    static Player* getPlayer(Vector3f color);
 
     static GameDockWidget* getDockWidget() {
         return currentDockWidget;
@@ -156,6 +159,14 @@ public:
 
     static void setCurrentBoard(Board* newBoard) {
         currentBoard = newBoard;
+    }
+
+    static SettingsWidget* getSettingsWidget() {
+        return settingsWidget;
+    }
+
+    static void setSettingsWidget(SettingsWidget* sw) {
+        settingsWidget = sw;
     }
 
     static void addStatusBarMessage(std::string message, int timeout);
@@ -282,7 +293,7 @@ private:
     void cacheModels();
     void cacheTextures();
 
-    static int localPlayers;
+    static int numPlayers;
     static int networkPlayers;
     static int currentPlayerIndex;
     static bool server;
@@ -295,6 +306,7 @@ private:
     static Board* currentBoard;
     static NetworkManager* networkManager;
     static MainGameWindow* mainWindow;
+    static SettingsWidget* settingsWidget;
 
     static QStatusBar* statusBar;
 

@@ -10,22 +10,26 @@
 #include "GameDockWidget.h"
 #include "Board.h"
 #include "MainGameWindow.h"
+#include "SettingsWidget.h"
 #include <QtGui/QMessageBox>
 #include <string>
 
-NetworkManager::NetworkManager(QString ip, int port, const bool server, QObject* parent) : QObject::QObject(parent) {
+NetworkManager::NetworkManager(QObject* parent) : QObject::QObject(parent) {
     tcpClient = NULL;
     tcpServer = NULL;
     server_clients = NULL;
+    connected = false;
+}
+
+void NetworkManager::setConnection(const QString ip, const int port, const bool server) {
     connected = server;
     this->server = server;
     this->ip = ip;
     this->port = port;
-    port = 9876;
     if (server) {
         tcpServer = new QTcpServer();
         if (!tcpServer->listen(QHostAddress::Any, port)) {
-            port = -1;
+            this->port = -1;
         }
         connect(tcpServer, SIGNAL(newConnection()), this, SLOT(server_newConnect()));
         server_clients = new QList<QTcpSocket*>();
@@ -78,6 +82,7 @@ void NetworkManager::server_newConnect() {
     QTcpSocket* client = tcpServer->nextPendingConnection();
     std::vector<Player*>* players = GameLibrary::getPlayers();
     server_clients->append(client);
+    sendPackets("adv" + GameLibrary::getSettingsWidget()->getAdvancedOptionsSerial(), client);
     sendPackets("brd" + GameLibrary::getCurrentBoard()->serialize(), client);
     for (unsigned int i = 0; i < players->size(); i++) {
         sendPackets("plr" + players->at(i)->serialize(), client);
@@ -147,13 +152,9 @@ void NetworkManager::parsePackets(std::string msg) {
         int tile = atoi(dataptr);
         dataptr = (strchr(dataptr, ' ') + 1);
         int corner = atoi(dataptr);
-        Player* player;
-        for (int i = 0; i < GameLibrary::getNumberOfPlayers(); i++) {
-            if (GameLibrary::getPlayers()->at(i)->getColor() == color) {
-                player = GameLibrary::getPlayers()->at(i);
-                player->placeSettlement(tile, corner);
-                break;
-            }
+        Player* player = GameLibrary::getPlayer(color);
+        if (player) {
+            player->placeSettlement(tile, corner);
         }
     } else if (code.compare("upg") == 0) { //upgrade settlement
         const char* dataptr = msg.data();
@@ -167,15 +168,10 @@ void NetworkManager::parsePackets(std::string msg) {
         int tile = atoi(dataptr);
         dataptr = (strchr(dataptr, ' ') + 1);
         int corner = atoi(dataptr);
-        Player* player;
-        for (int i = 0; i < GameLibrary::getNumberOfPlayers(); i++) {
-            if (GameLibrary::getPlayers()->at(i)->getColor() == color) {
-                player = GameLibrary::getPlayers()->at(i);
-                player->upgradeSettlement(tile, corner);
-                break;
-            }
+        Player* player = GameLibrary::getPlayer(color);
+        if (player) {
+            player->upgradeSettlement(tile, corner);
         }
-
     } else if (code.compare("rol") == 0) { //dice roll
         std::vector<Player*>* players = GameLibrary::getPlayers();
         for (int i = 0; i < GameLibrary::getNumberOfPlayers(); i++) {//LOCAL PLAYERS
@@ -205,16 +201,13 @@ void NetworkManager::parsePackets(std::string msg) {
         int corner = atoi(dataptr);
         dataptr = (strchr(dataptr, ' ') + 1);
         int direction = atoi(dataptr);
-        Player* player;
-        for (int i = 0; i < GameLibrary::getNumberOfPlayers(); i++) {
-            if (GameLibrary::getPlayers()->at(i)->getColor() == color) {
-                player = GameLibrary::getPlayers()->at(i);
-                player->placeRoad(tile, corner, direction);
-                break;
-            }
+        Player* player = GameLibrary::getPlayer(color);
+        if (player) {
+            player->placeRoad(tile, corner, direction);
         }
-
-    } else if (code.compare("trd") == 0) { // trade ... create make and accept tags??
+    } else if (code.compare("mkt") == 0) { // make trade
+    } else if (code.compare("rmt") == 0) { //remove trade
+    } else if (code.compare("acp") == 0) { //accept trade
     } else if (code.compare("plr") == 0) { //define player
         const char* dataptr = msg.data();
         Vector3f color = Vector3f();
@@ -225,7 +218,11 @@ void NetworkManager::parsePackets(std::string msg) {
         color.b = atof(dataptr);
         dataptr = (strchr(dataptr, ':') + 1);
         std::string name = std::string(dataptr);
-        GameLibrary::addPlayer(new Player(color, name));
+        Player* p = new Player(color, name);
+        p->reset();
+        p->setCurrentBoard(GameLibrary::getCurrentBoard());
+        p->setRemote(true);
+        GameLibrary::addPlayer(p);
 
     } else if (code.compare("win") == 0) { //player declares victory
     } else if (code.compare("die") == 0) { //player quits
@@ -239,25 +236,35 @@ void NetworkManager::parsePackets(std::string msg) {
         color.b = atof(dataptr);
         dataptr = (strchr(dataptr, ':') + 1);
         std::string name = std::string(dataptr);
-        std::vector<Player*>* players = GameLibrary::getPlayers();
-        Player* player;
-        if (players != NULL) {
-            for (int i = 0; i < GameLibrary::getNumberOfPlayers(); i++) {
-                Vector3f playerColor = GameLibrary::getPlayers()->at(i)->getColor();
-                if (playerColor == color) {
-                    player = GameLibrary::getPlayers()->at(i);
-                    if (GameLibrary::getCurrentLocalPlayer()) {
-                        GameLibrary::getCurrentLocalPlayer()->endTurn();
-                    }
-                    GameLibrary::setCurrentPlayer(player);
-                    player->beginTurn();
-                    break;
-                }
+        Player* player = GameLibrary::getPlayer(color);
+        //if player->getName()
+        if (player) {
+            if (GameLibrary::getCurrentLocalPlayer()) {
+                GameLibrary::getCurrentLocalPlayer()->endTurn();
             }
+            GameLibrary::setCurrentPlayer(player);
+            player->beginTurn();
         }
     } else if (code.compare("bgn") == 0) { //start game
         connected = true;
         GameLibrary::getCurrentMainWindow()->client_start();
+    } else if (code.compare("rme") == 0) { //army
+
+    } else if (code.compare("adv") == 0) { //advanced options
+        const char* dataptr = msg.data();
+        GameLibrary::BOARDRADIUS = atoi(dataptr);
+        dataptr = (strchr(dataptr, ' ') + 1);
+        GameLibrary::BOATS = atoi(dataptr);
+        dataptr = (strchr(dataptr, ' ') + 1);
+        GameLibrary::BRIDGES = atoi(dataptr);
+        dataptr = (strchr(dataptr, ' ') + 1);
+        GameLibrary::ISLANDS = atoi(dataptr);
+        dataptr = (strchr(dataptr, ' ') + 1);
+        GameLibrary::STARTING_RESOURCES = atoi(dataptr);
+        dataptr = (strchr(dataptr, ' ') + 1);
+        GameLibrary::TILE_SEPARATION = atoi(dataptr);
+        dataptr = (strchr(dataptr, ' ') + 1);
+        GameLibrary::WATER_BORDER = atoi(dataptr);
     }
 
     if (nextmsg != 0) {

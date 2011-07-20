@@ -14,11 +14,11 @@
 #include <QtGui/QFormLayout>
 #include <QtGui/QLineEdit>
 #include <QtGui/QCheckBox>
-#include <QtGui/QTableWidget>
 #include <QtGui/QGroupBox>
 #include <QtGui/QSpacerItem>
 #include <QtGui/QPushButton>
 #include <QtGui/QCommandLinkButton>
+#include <QtGui/QListWidget>
 #include "AdvancedOptions.h"
 
 class SettingsWidget : public QWidget {
@@ -30,10 +30,14 @@ public:
     QString getIP();
     QString getPort();
     bool serverSet();
+    void createPlayers();
+    std::string getAdvancedOptionsSerial();
 
 signals:
 void startGame();
 protected slots:
+    void addPlayer();
+    void removePlayer();
     void openAdvancedOptions();
     void startPressed();
     void toggleNetworking(int state);
@@ -53,7 +57,7 @@ private:
 
     QGroupBox* playerBox;
     QGridLayout* playerLayout;
-    QTableWidget* playerTable;
+    QListWidget* playerTable;
     QPushButton* addPlayerButton;
     QPushButton* removePlayerButton;
 

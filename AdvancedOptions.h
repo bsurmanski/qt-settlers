@@ -19,6 +19,7 @@ public:
     AdvancedOptions();
     virtual ~AdvancedOptions();
     void apply();
+    std::string serialize();
 private:
     QFormLayout* layout;
     QLabel* radiusLabel;

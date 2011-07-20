@@ -89,17 +89,12 @@ void GLFrame::resizeGL(int width, int height) {
 }
 
 void GLFrame::newGame() {
-    srand(time(NULL));
-
     state = INGAME;
 
     int numPlayers = 1;
     if (GameLibrary::getNetworkManager()->isServer()) {
         board = new Board();
-
-        for (int i = 0; i < numPlayers; i++) { //initialize Players
-            GameLibrary::addPlayer(new Player(possiblePlayerColors[rand() % 8]));
-        }
+        GameLibrary::setCurrentBoard(board);
 
         players = GameLibrary::getPlayers();
 
@@ -108,10 +103,11 @@ void GLFrame::newGame() {
     } else {
         board = GameLibrary::getCurrentBoard();
         numPlayers = GameLibrary::getNumberOfPlayers();
-        for (int i = 0; i < numPlayers; i++) { //initialize Players
-            GameLibrary::addPlayer(new Player(possiblePlayerColors[rand() % 8]));
-        }
         players = GameLibrary::getPlayers();
+    }
+
+    for (unsigned int i = 0; i < players->size(); i++) {
+        players->at(i)->setCurrentBoard(board);
     }
 
     dice = Vector2i();

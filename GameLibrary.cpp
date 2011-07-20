@@ -142,6 +142,17 @@ std::vector<Player*>* GameLibrary::getPlayers() {
     return players;
 }
 
+Player* GameLibrary::getPlayer(Vector3f color) {
+    if (players) {
+        for (int i = 0; i < players->size(); i++) {
+            if (players->at(i)->getColor() == color) {
+                return players->at(i);
+            }
+        }
+    }
+    return NULL;
+}
+
 void GameLibrary::addPlayer(Player* player) {
     if (players == 0) {
         players = new std::vector<Player*>();
@@ -176,7 +187,7 @@ bool GameLibrary::checkLargestArmy(Player* player) {
     bool ret = false;
     bool someoneHas = false;
     if (player->getLargestArmy() >= 3) {
-        for (int i = 0; i < localPlayers; i++) {
+        for (int i = 0; i < numPlayers; i++) {
             Player* current = players->at(i);
             if (current->hasLargestArmy()) {
                 someoneHas = true;
@@ -201,7 +212,7 @@ bool GameLibrary::checkLongestRoad(Player* player) {
     bool ret = false;
     bool someoneHas = false;
     if (player->getLongestRoad() >= 5) {
-        for (int i = 0; i < localPlayers; i++) {
+        for (int i = 0; i < numPlayers; i++) {
             Player* current = players->at(i);
             if (current->hasLongestRoad()) {
                 someoneHas = true;
@@ -224,7 +235,7 @@ bool GameLibrary::checkLongestRoad(Player* player) {
 }
 
 
-int GameLibrary::localPlayers = 0;
+int GameLibrary::numPlayers = 0;
 int GameLibrary::networkPlayers = 0;
 int GameLibrary::currentPlayerIndex = 0;
 
@@ -238,6 +249,7 @@ GameDockWidget* GameLibrary::currentDockWidget = 0;
 GLFrame* GameLibrary::currentGLWidget = 0;
 NetworkManager* GameLibrary::networkManager = 0;
 MainGameWindow* GameLibrary::mainWindow = 0;
+SettingsWidget* GameLibrary::settingsWidget = 0;
 
 QStatusBar* GameLibrary::statusBar = 0;
 Board* GameLibrary::currentBoard = 0;

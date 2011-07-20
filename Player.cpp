@@ -25,48 +25,22 @@
 #define NORMAL 0
 #define PLACING_ROAD 1
 
-Player::Player(Vector3f color) {
-    devCards = new QList<DevelopmentCard*>();
-    this->color = color;
-    selection = GameLibrary::getCurrentBoard()->getDefaultNodeSelection();
-    selector = new Sprite("selector.png");
-    selector->addState("roadPlace.png");
-    selector->easeTo(selection->getPosition() + Vector3f(0, 0, 2));
-
-    roads = new Road*[NUMROADS];
-    settlements = new Settlement*[SETTLEMENTS + CITIES]; //holds all settlements and 
-
-    reset();
-
-    startOfGame = true;
-    currentPlayer = false;
-
-    name = "guy"; //TODO: make it so that name is editable
-
-    remotePlayer = false;
-
-    GameLibrary::getNetworkManager()->sendPackets("plr", this->serialize());
-}
-
 Player::Player(Vector3f color, const std::string name) {
     devCards = new QList<DevelopmentCard*>();
     this->color = color;
-    selection = GameLibrary::getCurrentBoard()->getDefaultNodeSelection();
+    selection = NULL;
     selector = new Sprite("selector.png");
     selector->addState("roadPlace.png");
-    selector->easeTo(selection->getPosition() + Vector3f(0, 0, 2));
 
     roads = new Road*[NUMROADS];
     settlements = new Settlement*[SETTLEMENTS + CITIES]; //holds all settlements and 
 
-    reset();
-
     startOfGame = true;
     currentPlayer = false;
 
-    this->name = std::string(name); //TODO: make it so that name is editable
+    this->name = std::string(name);
 
-    remotePlayer = true;
+    remotePlayer = false;
 }
 
 Player::~Player() {
@@ -120,8 +94,6 @@ void Player::reset() {
     state = NORMAL;
 
     monopolyWarning = NULL;
-
-    selection = GameLibrary::getCurrentBoard()->getDefaultNodeSelection();
 }
 
 bool Player::canPlaceSettlement() {
@@ -426,6 +398,10 @@ bool Player::isRemote() {
     return remotePlayer;
 }
 
+void Player::setRemote(bool rmt) {
+    remotePlayer = rmt;
+}
+
 void Player::beginTurn() {
     currentPlayer = true;
     statusChanged();
@@ -440,6 +416,11 @@ void Player::addPoint() {
 
 int Player::getScore() {
     return points;
+}
+
+void Player::setCurrentBoard(Board* b) {
+    selection = b->getDefaultNodeSelection();
+    selector->easeTo(selection->getPosition() + Vector3f(0, 0, 2));
 }
 
 /**

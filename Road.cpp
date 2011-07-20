@@ -7,7 +7,6 @@
 
 #include "Road.h"
 #include "Board.h"
-//#include <QtCore/QList>
 
 Road::Road() {
 
@@ -18,7 +17,6 @@ Road::Road(Tile::CornerNode* node, Tile::CornerNode* node2, Vector3f color) {
         if (GameLibrary::BOATS) {
             isBoat = true;
             isBridge = false;
-            //throw "boats not supported yet"; // FIX BOATS
         } else {
             throw "attempt to make boat, or not valid road"; // not a valid road, points to something it shouldnt
         }
@@ -61,16 +59,12 @@ Road::Road(Tile::CornerNode* node, Tile::CornerNode* node2, Vector3f color) {
     node2->registerRoad(this, node2Dir);
 
     if (isBoat) {
-        //model = new Model("ship.mdl");
         model = GameLibrary::getInstance()->getCachedModel("ship.mdl");
     } else if (isBridge) {
         model = GameLibrary::getInstance()->getCachedModel("bridge.mdl");
-        //model = new Model("bridge.mdl");
     } else {
         model = GameLibrary::getInstance()->getCachedModel("road.mdl");
-        //model = new Model("road.mdl");
     }
-    //model->changeColor(color);
     this->color = color;
     this->position = ((node->getPosition() + node2->getPosition()) / 2);
     this->direction = direction;
@@ -102,20 +96,6 @@ float Road::getRotation(int direction, Tile::CornerNode* node) {
     }
     return 0;
 }
-
-//int Road::getLongestRoad() {
-//    int maxSize = 15;
-//    int length = 0;
-//    Road** visited = new Road*[maxSize];
-//    memset(visited, 0, sizeof (visited));
-//    int a = getLongestRoadRecursive();
-//
-//    for (int i = 0; i < maxSize; i++) { //clean up
-//        delete visited[i];
-//    }
-//    delete visited;
-//    return length;
-//}
 
 /**
  * Thoughts: roads system could be separated. but if you check on each road placement, then it will always have longest
@@ -166,15 +146,6 @@ int Road::getLongestRoad(QList<Road*>* roadList, Tile::CornerNode* node) {
     }
     return longest;
 }
-
-//bool Road::roadVisited(Road** list, int length, Road* road) {
-//    for (int i = 0; i < length; i++) {
-//        if (list[i] == road) {
-//            return true;
-//        }
-//    }
-//    return false;
-//}
 
 Vector3f Road::getPlayerColor() {
     return color;

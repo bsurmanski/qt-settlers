@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'MainGameWindow.h'
 **
-** Created: Mon Jul 18 13:30:42 2011
+** Created: Wed Jul 20 10:02:24 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.3)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -39,7 +39,7 @@ static const uint qt_meta_data_MainGameWindow[] = {
 
 static const char qt_meta_stringdata_MainGameWindow[] = {
     "MainGameWindow\0\0openStatistics()\0"
-    "startGame()\0"
+    "startConnect()\0"
 };
 
 const QMetaObject MainGameWindow::staticMetaObject = {
@@ -72,7 +72,7 @@ int MainGameWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: openStatistics(); break;
-        case 1: startGame(); break;
+        case 1: startConnect(); break;
         default: ;
         }
         _id -= 2;
