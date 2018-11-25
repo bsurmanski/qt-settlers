@@ -1,4 +1,4 @@
-#Qt Settlers
+# Qt Settlers
 
 A Multiplayer settlement and resource gathering game. 
 
